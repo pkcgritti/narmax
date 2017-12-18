@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include "Collection.hpp"
 #include "gtest/gtest.h"
@@ -38,9 +39,3 @@ namespace {
     // Exercises the Xyz feature of Foo.
   }
 }
-
-int main(int argc, char *argv[]) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
-
