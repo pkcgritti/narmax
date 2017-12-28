@@ -38,4 +38,8 @@ namespace {
     EXPECT_EQ(vec[1], 2.0);
     // Exercises the Xyz feature of Foo.
   }
+
+  TEST_F(CollectionTest, deletionTest) {
+    EXPECT_EQ(1.0, 1.0);
+  }
 }

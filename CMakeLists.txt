@@ -1,45 +1,63 @@
 cmake_minimum_required(VERSION 3.0)
-project(narmax)
 
-#########################
+# Options. Turn on with 'cmake -Dmyvarname=ON'
+option(test "Build all tests." OFF)
+
+# Make project directories available
+set(PROJECT_NAME narmax)
+project(${PROJECT_NAME})
+
+set(CMAKE_CXX_FLAGS "-g -Wall")
+
+# Force static runtime libraries for msvc builds
+if(MSVC)
+  set(variables
+  CMAKE_CXX_FLAGS_DEBUG
+  CMAKE_CXX_FLAGS_RELEASE
+  CMAKE_CXX_FLAGS_RELWITHDEBINFO
+  CMAKE_CXX_FLAGS_MINSIZEREL)
+
+  foreach(variable ${variables})
+    if(${variable} MATCHES "/MD")
+      string(REGEX REPLACE "/MD" "/MT" ${variable} ${variable})
+    endif()
+  endforeach()
+endif()
+
 # Search for source files
-
 file(GLOB sources "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB testSources "${CMAKE_CURRENT_SOURCE_DIR}/src/t_*.cpp")
 list(FILTER sources EXCLUDE REGEX "t_.+$")
 
-#################################
-# Download and install GoogleTest
+# Normal libraries and executables
+message("Here are my sources: ${sources}")
+message("Here are my tests: ${testSources}")
 
-include(ExternalProject)
-ExternalProject_Add(gtest
-  # URL https://googletest.googlecode.com/files/gtest-1.7.0.zip
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
-  INSTALL_COMMAND ""
-  )
-ExternalProject_Get_Property(
-  gtest
-  source_dir
-  binary_dir
-  )
+# Testing
+if(test)
+  if(APPLE)
+    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE)
+    add_definitions(-D__GLIBCXX__)
+  endif(APPLE)
 
-##################
-# Define test executable
-add_executable(AllTest ${sources} ${testSources})
+  add_subdirectory(lib/googletest)
 
-##################
-# Configure it to use GTest
-add_dependencies(AllTest gtest)
-include_directories(${source_dir}/include)
-target_link_libraries(AllTest ${binary_dir}/libgtest.a)
-target_link_libraries(AllTest ${binary_dir}/libgtest_main.a)
+  enable_testing()
 
-#########################
-# Making the test runnable
-enable_testing()
-add_test(
-  NAME    AllTest
-  COMMAND AllTest
-  )
+# Include gtest library
+  include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+# Unit tests TODO: Make narmax a library
+  foreach(tsrc ${testSources})
+    get_filename_component(tfname ${tsrc} NAME_WE)
+    string(REGEX REPLACE ".*t_" "" tname ${tfname})
+    message("Processing unit tests for ${tname}")
+    add_executable(${tname} ${tsrc} ${sources})
+    target_link_libraries(${tname} gtest gtest_main)
+    add_test(${tname} ${tname})
+  endforeach()
+endif(test)
+  
+
+
 
