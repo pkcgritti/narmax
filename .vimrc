@@ -1,8 +1,5 @@
-let g:TargetFile='Foo.cpp'
-let g:TargetFlags=''
-
-function! Compile()
-  execute '!g++ ' g:TargetFile '-o "TEST"'
-endfunction
-
-nnoremap <f5> :call Compile()<cr>
+nnoremap <leader>lv :vsplit .vimrc<cr>
+nnoremap <leader>ls :source .vimrc<cr>
+nnoremap <leader>mv :vsplit .maketest<cr>
+nnoremap <f5> :!clear && make -f .maketest<cr>
+autocmd BufNewFile,BufRead .maketest set syntax=make

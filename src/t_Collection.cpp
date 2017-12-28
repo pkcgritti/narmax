@@ -3,6 +3,8 @@
 #include "Collection.hpp"
 #include "gtest/gtest.h"
 
+using namespace std;
+
 namespace {
   class CollectionTest : public ::testing::Test {
   protected:
@@ -30,16 +32,34 @@ namespace {
     }
   };
 
-  TEST_F(CollectionTest, creationTest) {
-    std::vector<double> vec;
-    vec.push_back(1.0);
-    vec.push_back(2.0);
-    narmax::Collection c(vec);
-    EXPECT_EQ(vec[1], 2.0);
-    // Exercises the Xyz feature of Foo.
+  TEST(Collection, EmptyConstructor) {
+    RecordProperty("description", "Empty constructors should work");
+    narmax::Collection collection;
+    std::cout << collection;
   }
 
-  TEST_F(CollectionTest, deletionTest) {
-    EXPECT_EQ(1.0, 1.0);
+  TEST(Collection, DoubleConstructor) {
+    RecordProperty("description", "Double pointer constructor should work");
+    double data[] = {1, 2, 3, 4};
+    narmax::Collection collection(data, 4);
+    for (int i = 0; i < 4; i++) {
+      EXPECT_DOUBLE_EQ(data[i], collection[i]);
+    }
+  }
+
+  TEST(Collection, VectorConstructor) {
+    RecordProperty("description", "Vector constructor should work");
+    std::vector<double> data = {1, 2, 3, 4};
+    narmax::Collection collection(data);
+    for (std::size_t i = 0; i < data.size(); i++) {
+      EXPECT_DOUBLE_EQ(data[i], collection[i]);
+    }
+  }
+
+  TEST(Collection, InitListConstructor) {
+    RecordProperty("description", "Initialization list constructor should work");
+    narmax::Collection collection({1.25, 4.25});
+    EXPECT_DOUBLE_EQ(collection[0], 1.25);
+    EXPECT_DOUBLE_EQ(collection[1], 4.25);
   }
 }

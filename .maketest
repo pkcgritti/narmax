@@ -1,0 +1,26 @@
+sources := $(wildcard src/*.cpp) 
+sources := $(filter-out src/t_%.cpp, $(sources))
+objects := $(patsubst src/%.cpp,build/testing/%.o,$(sources))
+flags   := -std=c++11 -g -Wall
+include := 
+cxx     := g++
+binary  := build/testbin
+
+all: build run
+
+.PHONY: build run
+build: $(binary)
+
+$(binary): $(objects)
+	@mkdir -p $(@D)
+	$(cxx) $(flags) $^ -o $@ $(ldflags)
+
+build/testing/%.o: src/%.cpp
+	@mkdir -p $(@D)
+	$(cxx) $(flags) -c $< -o $@ $(ldflags)
+
+run:
+	@echo "Script testing"
+	@echo "~"
+	@./$(binary)
+	@echo "~"

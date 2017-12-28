@@ -4,23 +4,36 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <initializer_list>
 
 namespace narmax {
-  class Collection {
-  public:
-    Collection(std::vector<double>&);
-    Collection(std::vector<double>&, std::string);
-    Collection(double&, int);
-    // Collection(double &, int, string);
-    // Collection(Collection&);
-    // Collection(Collection&&);
-    // vector<double> getData() { return _data; };
-    // vector<double> getRange() { return _data; };
+  namespace data {
+    class Collection {
+      public:
+        Collection();
+        Collection(double*, int);
+        Collection(double*, int, const std::string&);
+        Collection(const std::vector<double>&);
+        Collection(const std::vector<double>&, const std::string&);
+        Collection(std::initializer_list<double>);
+        Collection(std::initializer_list<double>, const std::string&);
+        Collection(const Collection&);
+        Collection(Collection &&);
 
-    friend std::ostream& operator<<(std::ostream&, const Collection&);
-  private:
-    std::vector<double> _data;
-    std::string _name;
+        std::vector<double>& getData() { return data; };
+        std::string getName() const { return name; };
+        void setName(std::string name) { this->name = name; };
+        std::size_t getSize() const { return data.size(); };
+
+        double& operator[](int index) { return data[index]; };
+        double at(int index) { return data[index]; };
+
+        friend std::ostream& operator<<(std::ostream&, const Collection&);
+        std::ostream& printSpaced(std::ostream&, std::size_t, std::size_t limit = 4) const;
+      private:
+        std::vector<double> data;
+        std::string name;
+    };
   };
 };
 

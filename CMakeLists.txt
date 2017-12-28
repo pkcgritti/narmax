@@ -28,6 +28,7 @@ endif()
 file(GLOB sources "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB testSources "${CMAKE_CURRENT_SOURCE_DIR}/src/t_*.cpp")
 list(FILTER sources EXCLUDE REGEX "t_.+$")
+list(FILTER sources EXCLUDE REGEX "test.cpp")
 
 # Normal libraries and executables
 message("Here are my sources: ${sources}")
