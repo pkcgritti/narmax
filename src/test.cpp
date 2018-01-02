@@ -16,37 +16,13 @@ void printVector(const vector<T>& vec);
 
 // Place your code below
 
-void dbgPure() {
-  cout << "Checking how min & max returns\n";
-  vector<string> strings;
-  vector<size_t> lengths;
-
-  strings.push_back("Hello world");
-  strings.push_back("My name is mother fucker");
-  strings.push_back("Another string");
-
-  for_each(strings.begin(), strings.end(),
-           [&lengths] (const string& str) {
-             lengths.push_back(str.size());
-           });
-
-  cout <<  *std::max_element(lengths.begin(), lengths.end());
-
-  printVector(strings);
-  printVector(lengths);
-}
-
-void dbgCollection() {
-  cout << "No debug for collection\n";
-}
-
-void dbfMIMOFrame() {
+void debug() {
+  narmax::data::Collection c1({1, 223, -3123.1231241239012931, 4, 5, 6, 7}, "Thermal Resistance");
+  narmax::data::Collection c2({1, 2, 3, 4, 5, 6, 7}, "Volume");
   narmax::data::MIMOFrame frame;
-  narmax::data::Collection res({1, 2, 3, 4}, "Resistance");
-  narmax::data::Collection var({5, 6, 7, 8}, "Variance");
+  frame.push(c1);
+  frame.push(c2);
 
-  frame.push(res, true);
-  frame.push(var);
   cout << frame;
 }
 
@@ -59,9 +35,7 @@ typedef struct {
 } CBList;
 
 const CBList callbacks[] = {
-  { dbgPure, "Debug pure" },
-  { dbgCollection, "Debug collection" },
-  { dbfMIMOFrame, "Debug mimo frame" }
+  { debug, "Debug function" },
 };
 
 const unsigned int CBListLen = sizeof(callbacks) / sizeof(CBList);

@@ -34,14 +34,14 @@ namespace {
 
   TEST(Collection, EmptyConstructor) {
     RecordProperty("description", "Empty constructors should work");
-    narmax::Collection collection;
+    narmax::data::Collection collection;
     std::cout << collection;
   }
 
   TEST(Collection, DoubleConstructor) {
     RecordProperty("description", "Double pointer constructor should work");
     double data[] = {1, 2, 3, 4};
-    narmax::Collection collection(data, 4);
+    narmax::data::Collection collection(data, 4);
     for (int i = 0; i < 4; i++) {
       EXPECT_DOUBLE_EQ(data[i], collection[i]);
     }
@@ -50,7 +50,7 @@ namespace {
   TEST(Collection, VectorConstructor) {
     RecordProperty("description", "Vector constructor should work");
     std::vector<double> data = {1, 2, 3, 4};
-    narmax::Collection collection(data);
+    narmax::data::Collection collection(data);
     for (std::size_t i = 0; i < data.size(); i++) {
       EXPECT_DOUBLE_EQ(data[i], collection[i]);
     }
@@ -58,7 +58,7 @@ namespace {
 
   TEST(Collection, InitListConstructor) {
     RecordProperty("description", "Initialization list constructor should work");
-    narmax::Collection collection({1.25, 4.25});
+    narmax::data::Collection collection({1.25, 4.25});
     EXPECT_DOUBLE_EQ(collection[0], 1.25);
     EXPECT_DOUBLE_EQ(collection[1], 4.25);
   }

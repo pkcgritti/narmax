@@ -62,6 +62,31 @@ namespace narmax {
       }
     }
 
+    std::pair<double, std::size_t> Collection::max() const {
+      auto it = std::max_element(data.begin(), data.end());
+      std::pair<double, std::size_t> res(*it, it - data.begin());
+      return res;
+    }
+
+    std::pair<double, std::size_t> Collection::min() const {
+      auto it = std::min_element(data.begin(), data.end());
+      std::pair<double, std::size_t> res(*it, it - data.begin());
+      return res;
+    }
+
+    std::size_t Collection::largerDigit() const {
+      size_t digits = 0;
+      int max = (int) this->max().first, 
+          min = (int) this->min().first;
+
+      int probe = std::max(std::abs(max), std::abs(min));
+      while(probe > 0) {
+        probe /= 10;
+        digits++;
+      }
+      return digits;
+    }
+
     std::ostream& operator<<(std::ostream& os, const Collection& col) {
       os << "(" << col.name << ":" << col.data.size() << " samples)\n\t";
       if (col.data.size() == 0)
@@ -91,11 +116,11 @@ namespace narmax {
       return os;
     }
 
-    std::ostream& Collection::printSpaced(std::ostream& os, std::size_t spacing, std::size_t limit) const {
+    std::ostream& Collection::printSpaced(std::ostream& os, std::size_t spacing, std::size_t limit, int precision) const {
       std::size_t max = std::min(limit, data.size());
       std::for_each(data.begin(), data.begin() + max,
-                    [&os, spacing] (const double& val) {
-                      os << std::fixed << std::setw(spacing) << val;
+                    [&os, spacing, precision] (const double& val) {
+                      os << std::fixed << std::setprecision(precision) << std::setw(spacing) << val;
                     });
       return os;
     }
